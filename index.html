@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arnold Broqi — Creative Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & ROOT ─── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --blue:   #1B4FDE;
+      --red:    #E31A1A;
+      --yellow: #F5C800;
+      --black:  #0C0C0C;
+      --white:  #FFFFFF;
+      --gray:   #888;
+      --light:  #F6F6F4;
+      --ease:   cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── CUSTOM CURSOR ─── */
+    .cursor {
+      position: fixed; z-index: 9999;
+      width: 10px; height: 10px;
+      background: var(--blue);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: width .3s var(--ease), height .3s var(--ease), background .3s;
+      mix-blend-mode: multiply;
+    }
+    .cursor.big {
+      width: 60px; height: 60px;
+      background: var(--yellow);
+    }
+    a, button { cursor: none; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.8rem 3rem;
+      mix-blend-mode: normal;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      color: var(--white); text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .nav-logo.dark { color: var(--black); }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      font-size: 0.75rem; letter-spacing: 0.1em;
+      text-transform: uppercase; text-decoration: none;
+      color: rgba(255,255,255,0.6);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links.dark a { color: rgba(0,0,0,0.4); }
+    .nav-links.dark a:hover { color: var(--black); }
+
+    /* ─── HERO ─── */
+    #hero {
+      height: 100vh; min-height: 600px;
+      background: var(--black);
+      display: grid; grid-template-columns: 1fr 1fr;
+      overflow: hidden; position: relative;
+    }
+
+    /* accent top bar */
+    .hero-accent-bar {
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg,
+        var(--blue) 0 33.3%,
+        var(--red) 33.3% 66.6%,
+        var(--yellow) 66.6% 100%);
+      z-index: 2;
+    }
+
+    .hero-left {
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 5rem 3rem 4rem;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      font-size: 0.7rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; width: 30px; height: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+    h1.hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(4rem, 8vw, 9rem);
+      font-weight: 800;
+      line-height: 0.9; letter-spacing: -0.03em;
+      color: var(--white); margin-bottom: 3rem;
+    }
+    h1.hero-name .line2 { color: var(--blue); }
+    h1.hero-name .dot   { color: var(--red); }
+
+    .hero-roles {
+      display: flex; flex-direction: column; gap: 0.4rem;
+      margin-bottom: 3rem;
+    }
+    .hero-role {
+      font-size: 0.75rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-role .r-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .hero-role:nth-child(1) .r-dot { background: var(--blue); }
+    .hero-role:nth-child(2) .r-dot { background: var(--red); }
+    .hero-role:nth-child(3) .r-dot { background: var(--yellow); }
+    .hero-role:nth-child(4) .r-dot { background: rgba(255,255,255,0.3); }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 1rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff; text-decoration: none;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 1rem 2rem;
+      width: fit-content;
+      transition: border-color .3s, background .3s;
+    }
+    .hero-cta:hover { border-color: var(--blue); background: var(--blue); }
+
+    /* hero right = photo */
+    .hero-right {
+      position: relative; overflow: hidden;
+    }
+    .hero-photo {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      filter: grayscale(20%);
+      transform: scale(1.02);
+      transition: transform 8s var(--ease);
+    }
+    #hero:hover .hero-photo { transform: scale(1.0); }
+
+    /* photo overlay */
+    .hero-right::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to right, var(--black) 0%, transparent 30%);
+    }
+
+    /* big bg text */
+    .hero-bg-name {
+      position: absolute; bottom: -0.1em; left: 2rem; right: 2rem;
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(60px, 14vw, 160px);
+      font-weight: 800; letter-spacing: -0.04em;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+      pointer-events: none; user-select: none;
+      white-space: nowrap; overflow: hidden;
+    }
+
+    /* scroll indicator */
+    .scroll-ind {
+      position: absolute; bottom: 2.5rem; right: 3rem;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.5rem; z-index: 2;
+    }
+    .scroll-ind span {
+      font-size: 0.6rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+      writing-mode: vertical-rl;
+    }
+    .scroll-ind-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: scrollAnim 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollAnim {
+      0%,100% { transform: scaleY(1); transform-origin: top; }
+      50% { transform: scaleY(0.3); transform-origin: top; }
+    }
+
+    /* ─── SECTION REVEAL (JS adds .visible) ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+    .reveal.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── SECTION UTILITY ─── */
+    .s-label {
+      font-size: 0.68rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gray);
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .s-label::before {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--gray);
+    }
+    .s-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.025em;
+    }
+    hr.divider {
+      border: none; border-top: 1px solid rgba(0,0,0,0.08);
+      margin: 0 3rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about {
+      padding: 7rem 3rem;
+      display: grid; grid-template-columns: 380px 1fr;
+      gap: 5rem; align-items: start;
+    }
+    .about-sticky { position: sticky; top: 120px; }
+    .about-photo-wrap {
+      width: 100%; aspect-ratio: 3/4;
+      overflow: hidden; position: relative;
+      background: var(--light);
+    }
+    .about-photo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+    }
+    .about-photo-wrap .photo-label {
+      position: absolute; bottom: 1rem; left: 1rem;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.4);
+      padding: 0.3rem 0.7rem;
+    }
+
+    .about-content { padding-top: 0.5rem; }
+    .about-content .s-title { margin-bottom: 2rem; }
+    .about-content .lead {
+      font-size: 1.15rem; line-height: 1.85;
+      color: #444; margin-bottom: 2.5rem;
+      max-width: 540px;
+    }
+    .about-tags {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 3rem;
+    }
+    .a-tag {
+      font-size: 0.72rem; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 0.45rem 1.1rem;
+      border-radius: 100px;
+    }
+    .a-tag.blue   { background: rgba(27,79,222,0.1); color: var(--blue); }
+    .a-tag.red    { background: rgba(227,26,26,0.1); color: var(--red); }
+    .a-tag.yellow { background: rgba(245,200,0,0.15); color: #7d6500; }
+    .a-tag.gray   { background: rgba(0,0,0,0.05); color: var(--gray); }
+
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 0; border: 1px solid rgba(0,0,0,0.08);
+    }
+    .a-stat {
+      padding: 1.5rem; border-right: 1px solid rgba(0,0,0,0.08);
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .a-stat:last-child { border-right: none; }
+    .a-stat-n {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem; font-weight: 800; line-height: 1;
+    }
+    .a-stat-n .sup { font-size: 1rem; color: var(--blue); }
+    .a-stat-l {
+      font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--gray);
+    }
+
+    /* ─── PORTFOLIO ─── */
+    #portfolio { padding: 7rem 3rem; background: var(--light); }
+    .portfolio-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 4rem;
+    }
+    .portfolio-header .s-title { max-width: 400px; }
+
+    /* category tabs */
+    .cat-tabs {
+      display: flex; gap: 0; margin-bottom: 3rem;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    .cat-tab {
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      background: none; border: none;
+      color: var(--gray); position: relative;
+      transition: color .2s;
+      cursor: none;
+    }
+    .cat-tab::after {
+      content: ''; position: absolute;
+      bottom: -1px; left: 0; right: 0; height: 2px;
+      background: var(--blue); transform: scaleX(0);
+      transition: transform .3s var(--ease);
+    }
+    .cat-tab.active { color: var(--black); }
+    .cat-tab.active::after { transform: scaleX(1); }
+
+    /* portfolio grids */
+    .cat-panel { display: none; }
+    .cat-panel.active { display: block; }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .work-card {
+      background: var(--white);
+      overflow: hidden;
+      position: relative;
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+    }
+    .work-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+    .work-card-img {
+      width: 100%; aspect-ratio: 4/3;
+      background: var(--light);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .work-card-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .6s var(--ease);
+    }
+    .work-card:hover .work-card-img img { transform: scale(1.05); }
+
+    /* placeholder when no image */
+    .work-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem; font-weight: 800;
+      color: rgba(0,0,0,0.06);
+    }
+
+    .work-card-hover {
+      position: absolute; inset: 0;
+      background: rgba(27,79,222,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s;
+    }
+    .work-card:hover .work-card-hover { opacity: 1; }
+    .work-hover-label {
+      font-size: 0.72rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: #fff;
+    }
+
+    .work-card-body { padding: 1.25rem 1.5rem 1.5rem; }
+    .work-card-cat {
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 0.4rem;
+    }
+    .work-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .work-card-desc {
+      font-size: 0.82rem; color: var(--gray); line-height: 1.6;
+    }
+
+    /* add new card */
+    .work-card.add-new {
+      border: 2px dashed rgba(0,0,0,0.12);
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 280px; flex-direction: column; gap: 0.75rem;
+    }
+    .work-card.add-new .plus-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: rgba(0,0,0,0.2);
+    }
+    .work-card.add-new span {
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(0,0,0,0.25);
+    }
+
+    /* ─── SERVICES ─── */
+    #services {
+      padding: 7rem 3rem;
+      background: var(--white);
+    }
+    .services-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 4rem;
+    }
+    .services-header p {
+      font-size: 0.88rem; color: var(--gray);
+      max-width: 220px; text-align: right; line-height: 1.7;
+    }
+
+    .services-rows { display: flex; flex-direction: column; }
+    .svc-row {
+      display: flex; align-items: center;
+      padding: 1.6rem 0;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      gap: 2rem;
+      transition: padding-left .3s var(--ease), gap .3s;
+    }
+    .svc-row:last-child { border-bottom: 1px solid rgba(0,0,0,0.07); }
+    .svc-row:hover { padding-left: 1.5rem; }
+    .svc-row:hover .svc-num { color: var(--blue); }
+    .svc-num {
+      font-family: 'Syne', sans-serif; font-size: 0.75rem;
+      font-weight: 700; color: rgba(0,0,0,0.18);
+      min-width: 30px; transition: color .3s;
+    }
+    .svc-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+      font-weight: 800; letter-spacing: -0.01em;
+      flex: 1;
+    }
+    .svc-tags { display: flex; gap: 0.5rem; }
+    .svc-tag {
+      font-size: 0.65rem; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.3rem 0.75rem;
+      border-radius: 100px; background: var(--light); color: var(--gray);
+      white-space: nowrap;
+    }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: var(--black);
+      padding: 7rem 3rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    /* colored shapes background */
+    .contact-shape {
+      position: absolute; border-radius: 50%;
+      filter: blur(100px); opacity: 0.12; pointer-events: none;
+    }
+    .contact-shape.s1 {
+      width: 400px; height: 400px;
+      background: var(--blue);
+      top: -100px; right: -100px;
+    }
+    .contact-shape.s2 {
+      width: 300px; height: 300px;
+      background: var(--red);
+      bottom: -80px; right: 200px;
+    }
+    .contact-shape.s3 {
+      width: 200px; height: 200px;
+      background: var(--yellow);
+      bottom: 50px; right: 100px;
+    }
+
+    .contact-left { position: relative; z-index: 1; }
+    .contact-left .s-label { color: rgba(255,255,255,0.3); }
+    .contact-left .s-label::before { background: rgba(255,255,255,0.2); }
+    .contact-left .s-title {
+      color: #fff; margin-bottom: 1.5rem;
+    }
+    .contact-left .s-title em { font-style: normal; color: var(--yellow); }
+    .contact-left p { color: rgba(255,255,255,0.4); line-height: 1.8; font-size: 0.9rem; }
+
+    .contact-right {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .c-card {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      text-decoration: none;
+      background: rgba(255,255,255,0.03);
+      transition: border-color .2s, background .2s, transform .2s;
+    }
+    .c-card:hover {
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.07);
+      transform: translateX(6px);
+    }
+    .c-icon {
+      width: 46px; height: 46px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 1.1rem;
+    }
+    .c-icon.ig {
+      background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+    }
+    .c-info { flex: 1; display: flex; flex-direction: column; gap: 0.15rem; }
+    .c-label {
+      font-size: 0.62rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.3);
+    }
+    .c-val { font-size: 0.95rem; color: #fff; }
+    .c-arrow { color: rgba(255,255,255,0.2); transition: color .2s, transform .2s; }
+    .c-card:hover .c-arrow { color: rgba(255,255,255,0.6); transform: translateX(4px); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 1.5rem 3rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    footer p { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+    .f-bars { display: flex; gap: 4px; }
+    .f-bars span { display: block; width: 18px; height: 2px; border-radius: 1px; }
+    .f-bars span:nth-child(1) { background: var(--blue); }
+    .f-bars span:nth-child(2) { background: var(--red); }
+    .f-bars span:nth-child(3) { background: var(--yellow); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      body { cursor: auto; }
+      .cursor { display: none; }
+      a, button { cursor: pointer; }
+      nav { padding: 1.5rem; }
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 6rem 1.5rem 3rem; }
+      #about { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+      .about-sticky { position: static; }
+      .about-stats { grid-template-columns: repeat(3,1fr); }
+      #portfolio { padding: 4rem 1.5rem; }
+      .work-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      #services { padding: 4rem 1.5rem; }
+      .services-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .services-header p { text-align: left; }
+      #contact { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+      footer { padding: 1.5rem; }
+      hr.divider { margin: 0 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      h1.hero-name { font-size: 3.5rem; }
+      .work-grid { grid-template-columns: 1fr; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .a-stat:last-child { grid-column: 1/-1; border-right: none; border-top: 1px solid rgba(0,0,0,0.08); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CURSOR -->
+  <div class="cursor" id="cursor"></div>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <a class="nav-logo" href="#" id="nav-logo">AB</a>
+    <div class="nav-links" id="nav-links">
+      <a href="#about">Rreth</a>
+      <a href="#portfolio">Portofol</a>
+      <a href="#services">Shërbime</a>
+      <a href="#contact">Kontakt</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section id="hero">
+    <div class="hero-accent-bar"></div>
+
+    <div class="hero-left">
+      <div class="hero-eyebrow">Tiranë, Shqipëri &nbsp;·&nbsp; 2026</div>
+
+      <h1 class="hero-name">
+        Arnold<br />
+        <span class="line2">Broqi</span><span class="dot">.</span>
+      </h1>
+
+      <div class="hero-roles">
+        <div class="hero-role"><div class="r-dot"></div>Digital Creative Director</div>
+        <div class="hero-role"><div class="r-dot"></div>Broker &amp; Konsulent</div>
+        <div class="hero-role"><div class="r-dot"></div>Artist &amp; Piktor</div>
+        <div class="hero-role"><div class="r-dot"></div>Social Media Manager</div>
+      </div>
+
+      <a href="#portfolio" class="hero-cta">
+        Shiko punët
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="hero-right">
+      <img src="profile.jpg" alt="Arnold Broqi" class="hero-photo" />
+    </div>
+
+    <div class="hero-bg-name">BROQI</div>
+
+    <div class="scroll-ind">
+      <div class="scroll-ind-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════ ABOUT ═══════════ -->
+  <section id="about">
+    <div class="about-sticky">
+      <div class="about-photo-wrap reveal">
+        <img src="profile.jpg" alt="Arnold Broqi" />
+        <span class="photo-label">Arnold Broqi</span>
+      </div>
+    </div>
+
+    <div class="about-content">
+      <p class="s-label reveal">Rreth meje</p>
+      <h2 class="s-title reveal">Creative.<br />Strategjik.<br />Origjinal.</h2>
+
+      <p class="lead reveal reveal-delay-1">
+        Jam Arnold Broqi — <strong>Digital Creative Director</strong>, Artist dhe Broker
+        me bazë në Tiranë. Ndërthur artin vizual me strategjinë digjitale për të ndërtuar
+        brand-e me identitet të fortë dhe rezultate reale.
+      </p>
+
+      <div class="about-tags reveal reveal-delay-2">
+        <span class="a-tag blue">Digital Creative</span>
+        <span class="a-tag red">Broker</span>
+        <span class="a-tag yellow">Artist</span>
+        <span class="a-tag gray">Social Media</span>
+        <span class="a-tag gray">Konsulencë</span>
+      </div>
+
+      <div class="about-stats reveal reveal-delay-3">
+        <div class="a-stat">
+          <div class="a-stat-n">4<span class="sup">+</span></div>
+          <div class="a-stat-l">Vite eksperiencë</div>
+        </div>
+        <div class="a-stat">
+          <div class="a-stat-n">20<span class="sup">+</span></div>
+          <div class="a-stat-l">Klientë</div>
+        </div>
+        <div class="a-stat">
+          <div class="a-stat-n">100<span class="sup">%</span></div>
+          <div class="a-stat-l">Dedikimi</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════ PORTFOLIO ═══════════ -->
+  <section id="portfolio">
+    <div class="portfolio-header reveal">
+      <div>
+        <p class="s-label">Portofoli</p>
+        <h2 class="s-title">Punët<br />e mia.</h2>
+      </div>
+      <p style="font-size:.85rem;color:var(--gray);max-width:220px;text-align:right;line-height:1.7;">
+        Projekte reale nga fusha e kreativitetit dhe artit.
+      </p>
+    </div>
+
+    <!-- category tabs -->
+    <div class="cat-tabs reveal">
+      <button class="cat-tab active" data-cat="content">Content Creator</button>
+      <button class="cat-tab" data-cat="art">Art</button>
+    </div>
+
+    <!-- CONTENT CREATOR panel -->
+    <div class="cat-panel active" id="panel-content">
+      <div class="work-grid">
+
+        <div class="work-card reveal">
+          <div class="work-card-img">
+            <div class="work-placeholder">CC</div>
+            <div class="work-card-hover"><span class="work-hover-label">Shiko projektin →</span></div>
+          </div>
+          <div class="work-card-body">
+            <div class="work-card-cat">Social Media</div>
+            <div class="work-card-title">Kontakt AL — Q1 2026</div>
+            <div class="work-card-desc">Menaxhim i plotë i 4 platformave. 14.8M views totale.</div>
+          </div>
+        </div>
+
+        <div class="work-card reveal reveal-delay-1">
+          <div class="work-card-img">
+            <div class="work-placeholder">CC</div>
+            <div class="work-card-hover"><span class="work-hover-label">Shiko projektin →</span></div>
+          </div>
+          <div class="work-card-body">
+            <div class="work-card-cat">Branding</div>
+            <div class="work-card-title">Projekt 2</div>
+            <div class="work-card-desc">Identitet vizual dhe strategji komunikimi.</div>
+          </div>
+        </div>
+
+        <div class="work-card add-new reveal reveal-delay-2">
+          <div class="plus-icon">+</div>
+          <span>Shto projekt</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ART panel -->
+    <div class="cat-panel" id="panel-art">
+      <div class="work-grid">
+
+        <div class="work-card reveal">
+          <div class="work-card-img">
+            <div class="work-placeholder" style="color:rgba(227,26,26,0.08)">ART</div>
+            <div class="work-card-hover" style="background:rgba(227,26,26,0.88)"><span class="work-hover-label">Shiko veprën →</span></div>
+          </div>
+          <div class="work-card-body">
+            <div class="work-card-cat" style="color:var(--red)">Pikturë</div>
+            <div class="work-card-title">Vepra 1</div>
+            <div class="work-card-desc">Teknika dhe stili unik origjinal.</div>
+          </div>
+        </div>
+
+        <div class="work-card add-new reveal reveal-delay-1">
+          <div class="plus-icon">+</div>
+          <span>Shto vepër</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ═══════════ SERVICES ═══════════ -->
+  <section id="services">
+    <div class="services-header reveal">
+      <div>
+        <p class="s-label">Çfarë bëj</p>
+        <h2 class="s-title">Shërbime.</h2>
+      </div>
+      <p>Zgjidhje kreative dhe strategjike për brand-e dhe individë.</p>
+    </div>
+
+    <div class="services-rows">
+      <div class="svc-row reveal">
+        <span class="svc-num">01</span>
+        <span class="svc-name">Social Media Management</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Strategji</span>
+          <span class="svc-tag">Content</span>
+          <span class="svc-tag">Analizë</span>
+        </div>
+      </div>
+      <div class="svc-row reveal reveal-delay-1">
+        <span class="svc-num">02</span>
+        <span class="svc-name">Digital Creative Direction</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Branding</span>
+          <span class="svc-tag">Identitet vizual</span>
+        </div>
+      </div>
+      <div class="svc-row reveal reveal-delay-2">
+        <span class="svc-num">03</span>
+        <span class="svc-name">Broker &amp; Konsulencë</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Patundshmëri</span>
+          <span class="svc-tag">Investime</span>
+        </div>
+      </div>
+      <div class="svc-row reveal reveal-delay-3">
+        <span class="svc-num">04</span>
+        <span class="svc-name">Art &amp; Pikturë</span>
+        <div class="svc-tags">
+          <span class="svc-tag">Krijime origjinale</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ CONTACT ═══════════ -->
+  <section id="contact">
+    <div class="contact-shape s1"></div>
+    <div class="contact-shape s2"></div>
+    <div class="contact-shape s3"></div>
+
+    <div class="contact-left reveal">
+      <p class="s-label">Le të flasim</p>
+      <h2 class="s-title">Bashkëpuno<br />me <em>Arnold.</em></h2>
+      <p>Ke një projekt, ide apo pyetje?<br />Jam këtu — mos hezito.</p>
+    </div>
+
+    <div class="contact-right reveal reveal-delay-1">
+      <a href="https://www.instagram.com/arnold.broqi/" target="_blank" class="c-card">
+        <div class="c-icon ig">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="#fff" stroke="none"/>
+          </svg>
+        </div>
+        <div class="c-info">
+          <span class="c-label">Instagram</span>
+          <span class="c-val">@arnold.broqi</span>
+        </div>
+        <span class="c-arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 Arnold Broqi — Të gjitha të drejtat e rezervuara.</p>
+    <div class="f-bars"><span></span><span></span><span></span></div>
+  </footer>
+
+  <!-- ═══════════ JS ═══════════ -->
+  <script>
+    // ── Custom Cursor ──
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .work-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+    });
+
+    // ── Nav color on scroll ──
+    const nav = document.getElementById('main-nav');
+    const logo = document.getElementById('nav-logo');
+    const links = document.getElementById('nav-links');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > window.innerHeight * 0.85) {
+        nav.style.background = 'rgba(255,255,255,0.96)';
+        nav.style.backdropFilter = 'blur(12px)';
+        nav.style.borderBottom = '1px solid rgba(0,0,0,0.07)';
+        logo.classList.add('dark');
+        links.classList.add('dark');
+      } else {
+        nav.style.background = 'transparent';
+        nav.style.backdropFilter = 'none';
+        nav.style.borderBottom = 'none';
+        logo.classList.remove('dark');
+        links.classList.remove('dark');
+      }
+    });
+
+    // ── Scroll reveal ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => io.observe(el));
+
+    // ── Category tabs ──
+    const tabs = document.querySelectorAll('.cat-tab');
+    const panels = document.querySelectorAll('.cat-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.cat).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
