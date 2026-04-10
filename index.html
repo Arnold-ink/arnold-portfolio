@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="sq">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arnold Broqi — Creative Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
   <style>
     /* ─── RESET & ROOT ─── */
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -52,8 +52,23 @@
       padding: 1.8rem 3rem;
       mix-blend-mode: normal;
     }
+    .lang-toggle {
+      background: none; border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.5); cursor: none;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      padding: 0.35rem 0.8rem; border-radius: 100px;
+      transition: border-color .2s, color .2s;
+      display: flex; align-items: center; gap: 0.3rem;
+    }
+    .lang-toggle:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+    .lang-toggle.dark-nav { border-color: rgba(0,0,0,0.15); color: rgba(0,0,0,0.4); }
+    .lang-toggle.dark-nav:hover { border-color: var(--black); color: var(--black); }
+    .lt-active { color: #fff; font-weight: 700; }
+    .lang-toggle.dark-nav .lt-active { color: var(--black); }
+    .lt-sep { opacity: 0.3; }
+
     .nav-logo {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: 1rem; font-weight: 800;
       color: var(--white); text-decoration: none;
       letter-spacing: 0.04em;
@@ -106,7 +121,7 @@
       background: rgba(255,255,255,0.2);
     }
     h1.hero-name {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: clamp(4rem, 8vw, 9rem);
       font-weight: 800;
       line-height: 0.9; letter-spacing: -0.03em;
@@ -150,24 +165,212 @@
     }
     .hero-photo {
       width: 100%; height: 100%;
-      object-fit: cover; object-position: center top;
-      filter: grayscale(20%);
+      object-fit: contain; object-position: center bottom;
+      position: relative; z-index: 2;
       transform: scale(1.02);
       transition: transform 8s var(--ease);
     }
     #hero:hover .hero-photo { transform: scale(1.0); }
 
-    /* photo overlay */
-    .hero-right::before {
+    /* photo overlay — fade left using exact bg color, no grey */
+    .hero-right::after {
       content: '';
+      position: absolute; inset: 0; z-index: 3;
+      background: linear-gradient(to right, #0C0C0C 0%, rgba(12,12,12,0) 28%);
+      pointer-events: none;
+    }
+
+    /* ── BRUSH STROKES ── */
+    .brushes {
       position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(to right, var(--black) 0%, transparent 30%);
+      pointer-events: none; overflow: hidden;
+    }
+    .brush {
+      position: absolute;
+    }
+
+    /* BIG blue sweep — top, wide slash */
+    .brush-1 {
+      width: 420px; height: 80px;
+      background: var(--blue);
+      top: 12%; right: -40px;
+      border-radius: 55% 45% 60% 40% / 35% 65% 35% 65%;
+      opacity: 0.55;
+      filter: blur(1px);
+      animation: b1 6s ease-in-out infinite;
+      box-shadow: 0 0 40px 10px rgba(27,79,222,0.4);
+    }
+    /* BIG red slash — center diagonal */
+    .brush-2 {
+      width: 380px; height: 65px;
+      background: var(--red);
+      top: 42%; right: -20px;
+      border-radius: 40% 60% 45% 55% / 60% 40% 60% 40%;
+      opacity: 0.52;
+      filter: blur(1px);
+      animation: b2 8s ease-in-out infinite;
+      box-shadow: 0 0 35px 8px rgba(227,26,26,0.4);
+    }
+    /* BIG yellow slash — lower */
+    .brush-3 {
+      width: 300px; height: 55px;
+      background: var(--yellow);
+      bottom: 18%; right: 10px;
+      border-radius: 60% 40% 55% 45% / 45% 55% 45% 55%;
+      opacity: 0.6;
+      filter: blur(1px);
+      animation: b3 7s ease-in-out infinite;
+      box-shadow: 0 0 30px 8px rgba(245,200,0,0.45);
+    }
+    /* thin blue accent top-right corner */
+    .brush-4 {
+      width: 180px; height: 28px;
+      background: var(--blue);
+      top: 28%; right: 30px;
+      border-radius: 50%;
+      opacity: 0.4;
+      filter: blur(3px);
+      animation: b1 9s ease-in-out infinite reverse;
+    }
+    /* thin red accent mid-bottom */
+    .brush-5 {
+      width: 220px; height: 32px;
+      background: var(--red);
+      bottom: 32%; right: -15px;
+      border-radius: 50% 50% 40% 60% / 60% 40% 60% 40%;
+      opacity: 0.38;
+      filter: blur(3px);
+      animation: b3 10s ease-in-out infinite;
+    }
+    /* yellow dot glow — top right */
+    .brush-6 {
+      width: 90px; height: 90px;
+      background: var(--yellow);
+      top: 8%; right: 12%;
+      border-radius: 50%;
+      opacity: 0.3;
+      filter: blur(18px);
+      animation: b2 12s ease-in-out infinite reverse;
+    }
+
+    @keyframes b1 {
+      0%,100% { transform: rotate(-14deg) translateY(0)   scaleX(1);    opacity: 0.55; }
+      40%      { transform: rotate(-10deg) translateY(-18px) scaleX(1.08); opacity: 0.65; }
+      70%      { transform: rotate(-16deg) translateY(10px)  scaleX(0.94); opacity: 0.45; }
+    }
+    @keyframes b2 {
+      0%,100% { transform: rotate(10deg)  translateY(0)    scaleX(1);    opacity: 0.52; }
+      35%      { transform: rotate(7deg)   translateY(16px) scaleX(1.1);  opacity: 0.65; }
+      65%      { transform: rotate(13deg)  translateY(-12px) scaleX(0.92); opacity: 0.42; }
+    }
+    @keyframes b3 {
+      0%,100% { transform: rotate(-8deg) translateX(0)    scaleY(1);    opacity: 0.6; }
+      50%      { transform: rotate(-4deg) translateX(-20px) scaleY(1.15); opacity: 0.75; }
+    }
+
+    /* ── ARTISTIC STATS (hero-left) ── */
+    .hero-stats {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none; z-index: 0;
+      overflow: hidden;
+    }
+
+    /* floating big number */
+    .hstat {
+      position: absolute;
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .hstat-n {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 800; line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.15);
+    }
+    .hstat-l {
+      font-size: 0.58rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.2);
+    }
+
+    /* stat 1 — top-left corner, big ghost number */
+    .hstat-1 { top: 6rem; left: 2.5rem; animation: hsfloat 9s ease-in-out infinite; }
+    .hstat-1 .hstat-n { font-size: clamp(3rem, 6vw, 5.5rem); -webkit-text-stroke: 1px rgba(27,79,222,0.35); }
+
+    /* stat 2 — mid-left, red accent */
+    .hstat-2 { top: 50%; left: 2rem; transform: translateY(-50%); animation: hsfloat 7s ease-in-out infinite reverse; }
+    .hstat-2 .hstat-n { font-size: clamp(2rem, 4vw, 3.5rem); -webkit-text-stroke: 1px rgba(227,26,26,0.35); }
+
+    /* stat 3 — bottom, yellow */
+    .hstat-3 { bottom: 5.5rem; left: 2.5rem; animation: hsfloat 11s ease-in-out infinite; }
+    .hstat-3 .hstat-n { font-size: clamp(1.8rem, 3.5vw, 3rem); -webkit-text-stroke: 1px rgba(245,200,0,0.4); }
+
+    /* vertical bar chart — artistic */
+    .hstat-bars {
+      position: absolute; right: 1.5rem; bottom: 4rem;
+      display: flex; align-items: flex-end; gap: 5px;
+      animation: hsfloat 8s ease-in-out infinite;
+    }
+    .hbar {
+      width: 4px; border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      position: relative; overflow: hidden;
+    }
+    .hbar::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      border-radius: 2px;
+      animation: barGrow 3s ease-out forwards;
+    }
+    .hbar:nth-child(1) { height: 50px; }
+    .hbar:nth-child(1)::after { height: 70%; background: var(--blue); animation-delay: 0.1s; }
+    .hbar:nth-child(2) { height: 80px; }
+    .hbar:nth-child(2)::after { height: 85%; background: var(--red); animation-delay: 0.2s; }
+    .hbar:nth-child(3) { height: 60px; }
+    .hbar:nth-child(3)::after { height: 60%; background: var(--yellow); animation-delay: 0.3s; }
+    .hbar:nth-child(4) { height: 90px; }
+    .hbar:nth-child(4)::after { height: 95%; background: var(--blue); animation-delay: 0.4s; }
+    .hbar:nth-child(5) { height: 40px; }
+    .hbar:nth-child(5)::after { height: 75%; background: var(--red); animation-delay: 0.5s; }
+    .hbar:nth-child(6) { height: 70px; }
+    .hbar:nth-child(6)::after { height: 80%; background: var(--yellow); animation-delay: 0.6s; }
+    .hbar:nth-child(7) { height: 55px; }
+    .hbar:nth-child(7)::after { height: 65%; background: var(--blue); animation-delay: 0.7s; }
+
+    /* arc ring — top right of hero-left */
+    .hstat-arc {
+      position: absolute; top: 3.5rem; right: 1rem;
+      width: 70px; height: 70px;
+      animation: hsfloat 13s ease-in-out infinite reverse;
+    }
+    .hstat-arc svg { width: 100%; height: 100%; }
+
+    /* dot grid — decorative */
+    .hstat-dots {
+      position: absolute; top: 45%; right: 2rem;
+      display: grid; grid-template-columns: repeat(4, 6px);
+      gap: 6px;
+      animation: hsfloat 10s ease-in-out infinite;
+    }
+    .hstat-dots span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .hstat-dots span:nth-child(3n+1) { background: rgba(27,79,222,0.3); }
+    .hstat-dots span:nth-child(3n+2) { background: rgba(227,26,26,0.25); }
+    .hstat-dots span:nth-child(3n)   { background: rgba(245,200,0,0.25); }
+
+    @keyframes hsfloat {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes barGrow {
+      from { height: 0; }
     }
 
     /* big bg text */
     .hero-bg-name {
       position: absolute; bottom: -0.1em; left: 2rem; right: 2rem;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: clamp(60px, 14vw, 160px);
       font-weight: 800; letter-spacing: -0.04em;
       color: transparent;
@@ -223,7 +426,7 @@
       width: 24px; height: 1px; background: var(--gray);
     }
     .s-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: clamp(2.2rem, 4vw, 3.5rem);
       font-weight: 800; line-height: 1.05;
       letter-spacing: -0.025em;
@@ -257,6 +460,32 @@
       padding: 0.3rem 0.7rem;
     }
 
+    .current-role {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      background: rgba(27,79,222,0.07);
+      border: 1px solid rgba(27,79,222,0.18);
+      border-radius: 100px;
+      padding: 0.5rem 1.1rem;
+      margin-bottom: 2rem;
+    }
+    .cr-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 3px rgba(27,79,222,0.2);
+      animation: pulse 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 3px rgba(27,79,222,0.2); }
+      50%      { box-shadow: 0 0 0 6px rgba(27,79,222,0.08); }
+    }
+    .cr-text {
+      font-size: 0.78rem; color: #555; letter-spacing: 0.01em;
+    }
+    .cr-text strong { color: var(--black); }
+    .cr-text a { color: var(--blue); text-decoration: none; font-weight: 600; }
+    .cr-text a:hover { text-decoration: underline; }
+
     .about-content { padding-top: 0.5rem; }
     .about-content .s-title { margin-bottom: 2rem; }
     .about-content .lead {
@@ -288,7 +517,7 @@
     }
     .a-stat:last-child { border-right: none; }
     .a-stat-n {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: 2.2rem; font-weight: 800; line-height: 1;
     }
     .a-stat-n .sup { font-size: 1rem; color: var(--blue); }
@@ -363,7 +592,7 @@
     .work-placeholder {
       width: 100%; height: 100%;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: 3rem; font-weight: 800;
       color: rgba(0,0,0,0.06);
     }
@@ -387,12 +616,566 @@
       margin-bottom: 0.4rem;
     }
     .work-card-title {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: 1rem; font-weight: 700;
       margin-bottom: 0.4rem;
     }
     .work-card-desc {
       font-size: 0.82rem; color: var(--gray); line-height: 1.6;
+    }
+
+    /* ── PROJECT CARDS ── */
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .proj-card {
+      background: var(--white);
+      overflow: hidden;
+      cursor: none;
+      transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+    }
+    .proj-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.1);
+    }
+    .proj-card-img {
+      width: 100%; aspect-ratio: 4/3;
+      overflow: hidden; position: relative;
+      background: var(--black);
+    }
+    .proj-card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform .6s var(--ease);
+      filter: brightness(0.9);
+    }
+    .proj-card:hover .proj-card-img img { transform: scale(1.05); }
+    .proj-card-img--empty {
+      background: linear-gradient(135deg, #0C0C0C 0%, #1a1a2e 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .proj-empty-label {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 1.4rem; font-weight: 800;
+      color: rgba(227,26,26,0.3);
+      letter-spacing: -0.02em;
+    }
+    .proj-card-overlay {
+      position: absolute; inset: 0;
+      background: rgba(27,79,222,0.88);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s;
+    }
+    .proj-card:hover .proj-card-overlay { opacity: 1; }
+    .proj-card-overlay span {
+      font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #fff;
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 0.6rem 1.4rem;
+    }
+    .proj-card-body { padding: 1.5rem; }
+    .proj-cat {
+      font-size: 0.62rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--blue);
+      display: block; margin-bottom: 0.6rem;
+    }
+    .proj-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 1.1rem; font-weight: 700;
+      line-height: 1.3; margin-bottom: 0.6rem;
+    }
+    .proj-desc {
+      font-size: 0.82rem; color: var(--gray);
+      line-height: 1.7; margin-bottom: 1rem;
+    }
+    .proj-meta {
+      display: flex; gap: 1.5rem;
+      font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: rgba(0,0,0,0.25);
+    }
+    .proj-card--add {
+      border: 2px dashed rgba(0,0,0,0.1);
+      background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.75rem;
+      min-height: 320px;
+    }
+    .proj-card--add .plus-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: rgba(0,0,0,0.2);
+    }
+    .proj-card--add span {
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(0,0,0,0.25);
+    }
+
+    /* ── SUBPAGE OVERLAY ── */
+    .subpage {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--white);
+      transform: translateX(100%);
+      transition: transform 0.5s var(--ease);
+      overflow-y: auto;
+    }
+    .subpage.open { transform: translateX(0); }
+    .subpage-nav {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem 3rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    .subpage-back {
+      display: flex; align-items: center; gap: 0.75rem;
+      background: none; border: none; cursor: pointer;
+      font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--black);
+      transition: color .2s; cursor: none;
+    }
+    .subpage-back:hover { color: var(--blue); }
+    .subpage-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.04em; color: var(--gray);
+    }
+    .subpage-content {
+      padding: 3rem;
+    }
+    .subpage-poster-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+    .subpage-poster-grid .poster-card {
+      aspect-ratio: 4/5;
+    }
+
+    /* ── BRAND BLOCKS ── */
+    .brand-block {
+      background: var(--white);
+      border: 1px solid rgba(0,0,0,0.07);
+      margin-bottom: 1.25rem;
+      overflow: hidden;
+      transition: box-shadow .3s var(--ease);
+    }
+    .brand-block:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.07); }
+    .brand-header {
+      display: flex; align-items: stretch;
+      gap: 0;
+    }
+    .brand-info {
+      flex: 1; padding: 2rem 2.5rem;
+    }
+    .brand-tag {
+      display: inline-block;
+      font-size: 0.62rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--blue);
+      background: rgba(27,79,222,0.07);
+      border: 1px solid rgba(27,79,222,0.15);
+      padding: 0.25rem 0.8rem; border-radius: 100px;
+      margin-bottom: 0.75rem;
+    }
+    .brand-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.6rem;
+    }
+    .brand-desc {
+      font-size: 0.85rem; color: var(--gray);
+      line-height: 1.7; max-width: 480px;
+    }
+    .brand-thumb {
+      width: 260px; flex-shrink: 0;
+      object-fit: cover;
+    }
+    .brand-thumb--empty {
+      width: 260px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-logo {
+      width: 160px; height: 160px;
+      object-fit: contain;
+      border-radius: 16px;
+      background: transparent;
+      padding: 0;
+    }
+    .brand-logo--photo {
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    /* ── ART ENTRY CARD ── */
+    .art-entry-card {
+      position: relative; overflow: hidden;
+      cursor: pointer; cursor: none;
+      background: var(--black) !important;
+      border: none !important;
+      min-height: 220px;
+    }
+    .art-entry-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important; }
+    .art-brushes {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .art-brushes span {
+      position: absolute; border-radius: 50%;
+      filter: blur(40px); opacity: 0.35;
+    }
+    .art-brushes span:nth-child(1) { width:220px;height:220px; background:var(--blue); top:-60px; right:10%; animation: ab1 6s ease-in-out infinite; }
+    .art-brushes span:nth-child(2) { width:160px;height:160px; background:var(--red);  bottom:-40px; right:30%; animation: ab2 8s ease-in-out infinite; }
+    .art-brushes span:nth-child(3) { width:120px;height:120px; background:var(--yellow); top:20px; right:5%; animation: ab3 7s ease-in-out infinite; }
+    @keyframes ab1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-20px,15px) scale(1.1)} }
+    @keyframes ab2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(15px,-20px) scale(0.9)} }
+    @keyframes ab3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-10px,10px) scale(1.15)} }
+    .art-entry-inner {
+      position: relative; z-index: 2;
+      padding: 2.5rem 3rem;
+    }
+    .art-entry-label {
+      display: inline-block;
+      font-size: 0.62rem; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 1rem;
+    }
+    .art-entry-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800; letter-spacing: -0.03em;
+      color: #fff; line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+    .art-entry-sub {
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+      letter-spacing: 0.04em;
+    }
+    .art-entry-arrow {
+      position: absolute; bottom: 2.5rem; right: 3rem; z-index: 2;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.2rem;
+      transition: background .3s, transform .3s;
+    }
+    .art-entry-card:hover .art-entry-arrow { background: var(--yellow); color: var(--black); transform: translate(4px,-4px); }
+
+    /* ── ART PAGE ── */
+    .art-page-hero {
+      background: var(--black);
+      padding: 5rem 3rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .art-page-hero-brushes span {
+      position: absolute; border-radius: 50%;
+      filter: blur(60px); opacity: 0.25; pointer-events: none;
+    }
+    .art-page-hero-brushes span:nth-child(1) { width:400px;height:400px;background:var(--blue);   top:-100px; right:-80px; }
+    .art-page-hero-brushes span:nth-child(2) { width:250px;height:250px;background:var(--red);    bottom:-80px; left:30%; }
+    .art-page-hero-brushes span:nth-child(3) { width:180px;height:180px;background:var(--yellow); top:20%; right:25%; }
+    .art-page-tag {
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--yellow); margin-bottom: 1.2rem; display: block;
+    }
+    .art-page-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800; letter-spacing: -0.04em;
+      color: #fff; line-height: 1;
+      margin-bottom: 1.5rem; position: relative; z-index: 1;
+    }
+    .art-page-title em { color: var(--red); font-style: normal; }
+    .art-page-lead {
+      font-size: 1rem; color: rgba(255,255,255,0.55);
+      max-width: 560px; line-height: 1.8;
+      position: relative; z-index: 1;
+    }
+    .art-page-body {
+      padding: 4rem 3rem;
+    }
+    .art-section-label {
+      font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .art-section-label::after {
+      content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.08);
+    }
+    .art-statement {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+      margin-bottom: 4rem;
+    }
+    .art-statement-text h3 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 1.2rem; line-height: 1.1;
+    }
+    .art-statement-text p {
+      font-size: 0.88rem; color: var(--gray);
+      line-height: 1.85; margin-bottom: 1rem;
+    }
+    .art-mediums {
+      display: flex; flex-direction: column; gap: 0.75rem;
+      justify-content: center;
+    }
+    .art-medium-row {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 1.5rem;
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 12px;
+      transition: border-color .2s;
+    }
+    .art-medium-row:hover { border-color: var(--blue); }
+    .art-medium-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .art-medium-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+    }
+    .art-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem; margin-bottom: 4rem;
+    }
+    .art-gallery-item {
+      aspect-ratio: 3/4;
+      background: #111;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; cursor: none;
+    }
+    .art-gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .5s cubic-bezier(.25,.46,.45,.94);
+      display: block;
+    }
+    .art-gallery-item:hover img { transform: scale(1.06); }
+    .art-gallery-placeholder {
+      text-align: center; color: rgba(0,0,0,0.2);
+    }
+    .art-gallery-placeholder svg { opacity: 0.3; margin-bottom: 0.5rem; }
+    .art-gallery-placeholder span { display: block; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .art-cta-banner {
+      background: var(--black); border-radius: 16px;
+      padding: 3rem; display: flex; align-items: center;
+      justify-content: space-between; gap: 2rem;
+    }
+    .art-cta-banner h3 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 800; color: #fff;
+    }
+    .art-cta-banner p { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-top: 0.4rem; }
+    .art-cta-btn {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--yellow); color: var(--black);
+      padding: 0.9rem 2rem; border-radius: 100px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em;
+      text-decoration: none; white-space: nowrap;
+      transition: transform .2s, opacity .2s; cursor: none;
+    }
+    .art-cta-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+    /* ── Education ── */
+    .art-edu-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-bottom: 4rem;
+    }
+    .art-edu-card {
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 16px; padding: 2rem;
+      position: relative; overflow: hidden;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .art-edu-card:hover { border-color: var(--blue); box-shadow: 0 8px 32px rgba(27,79,222,0.07); }
+    .art-edu-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--blue);
+    }
+    .art-edu-card:last-child::before { background: var(--red); }
+    .art-edu-year {
+      font-size: 0.62rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray);
+      display: block; margin-bottom: 0.75rem;
+    }
+    .art-edu-school {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      margin-bottom: 0.3rem; line-height: 1.3;
+    }
+    .art-edu-degree {
+      font-size: 0.78rem; color: var(--blue);
+      font-weight: 600; letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+    }
+    .art-edu-card:last-child .art-edu-degree { color: var(--red); }
+    .art-edu-desc {
+      font-size: 0.82rem; color: var(--gray); line-height: 1.7;
+    }
+
+    /* ── Exhibitions ── */
+    .art-expo-list {
+      margin-bottom: 4rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+    }
+    .art-expo-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.5rem;
+      border: 1px solid rgba(0,0,0,0.07); border-radius: 12px;
+      text-decoration: none; color: var(--black);
+      transition: border-color .2s, background .2s;
+      gap: 1.5rem;
+    }
+    .art-expo-item:hover { border-color: var(--blue); background: rgba(27,79,222,0.03); }
+    .art-expo-left { display: flex; align-items: center; gap: 1.2rem; flex: 1; }
+    .art-expo-year {
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gray);
+      min-width: 60px;
+    }
+    .art-expo-type {
+      font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 100px;
+      font-weight: 600;
+    }
+    .art-expo-type--solo { background: rgba(27,79,222,0.08); color: var(--blue); }
+    .art-expo-type--group { background: rgba(227,26,26,0.08); color: var(--red); }
+    .art-expo-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 0.9rem; font-weight: 700;
+    }
+    .art-expo-venue { font-size: 0.78rem; color: var(--gray); }
+    .art-expo-arrow { font-size: 0.9rem; color: var(--gray); }
+    .art-expo-item--multi { cursor: default; }
+    .art-expo-item--multi:hover { border-color: var(--blue); background: rgba(27,79,222,0.03); }
+    .art-expo-media-links { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .art-expo-media-btn {
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em;
+      padding: 0.4rem 0.9rem; border-radius: 100px;
+      border: 1px solid rgba(0,0,0,0.12); color: var(--black);
+      text-decoration: none; transition: background .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .art-expo-media-btn:hover { background: var(--black); color: #fff; border-color: var(--black); }
+    .art-expo-placeholder {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 2rem; color: rgba(0,0,0,0.25);
+      border: 1px dashed rgba(0,0,0,0.1); border-radius: 12px;
+      font-size: 0.78rem; letter-spacing: 0.06em;
+    }
+    .art-expo-desc {
+      margin-top: -2.5rem; margin-bottom: 4rem;
+      padding: 1.5rem 2rem;
+      background: rgba(27,79,222,0.04);
+      border-left: 3px solid var(--blue);
+      border-radius: 0 12px 12px 0;
+    }
+    .art-expo-desc p {
+      font-size: 0.85rem; color: var(--gray);
+      line-height: 1.8;
+    }
+    .art-expo-desc em { color: var(--black); font-style: italic; }
+    .brand-socials {
+      display: flex; align-items: center;
+      padding: 1rem 2.5rem;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      gap: 0.6rem; flex-wrap: wrap;
+    }
+    .bsoc {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 100px;
+      font-size: 0.72rem; letter-spacing: 0.06em;
+      font-weight: 500; text-decoration: none;
+      transition: transform .2s, opacity .2s;
+      border: 1px solid transparent;
+    }
+    .bsoc:hover { transform: translateY(-2px); opacity: 0.85; }
+    .bsoc-ig { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+    .bsoc-fb { background: #1877F2; color: #fff; }
+    .bsoc-tt { background: #000; color: #fff; }
+    .bsoc-yt { background: #FF0000; color: #fff; }
+    .bsoc-li { background: #0A66C2; color: #fff; }
+    .bsoc-x { background: #000; color: #fff; }
+    .bsoc-pin { background: #E60023; color: #fff; }
+    .bsoc-web { background: #1a1a1a; color: #fff; border: 1px solid rgba(255,255,255,0.15); }
+
+    .brand-block--add {
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.75rem;
+      min-height: 100px;
+      border: 2px dashed rgba(0,0,0,0.1);
+      background: transparent;
+      cursor: none;
+    }
+    .brand-block--add .plus-icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; color: rgba(0,0,0,0.2);
+    }
+    .brand-block--add span {
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(0,0,0,0.25);
+    }
+
+    /* campaign label */
+    .campaign-label {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .camp-tag {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--blue);
+      background: rgba(27,79,222,0.08);
+      border: 1px solid rgba(27,79,222,0.15);
+      padding: 0.3rem 0.9rem; border-radius: 100px;
+    }
+    .camp-desc {
+      font-size: 0.78rem; color: var(--gray);
+    }
+
+    /* poster grid */
+    .poster-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+    .poster-card {
+      position: relative; overflow: hidden;
+      aspect-ratio: 4/5;
+      background: var(--light);
+      cursor: none;
+    }
+    .poster-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s var(--ease);
+      display: block;
+    }
+    .poster-card:hover img { transform: scale(1.04); }
+    .poster-overlay {
+      position: absolute; inset: 0;
+      background: rgba(12,12,12,0.55);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .poster-card:hover .poster-overlay { opacity: 1; }
+    .poster-overlay span {
+      font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #fff;
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 0.5rem 1.2rem;
     }
 
     /* add new card */
@@ -439,12 +1222,12 @@
     .svc-row:hover { padding-left: 1.5rem; }
     .svc-row:hover .svc-num { color: var(--blue); }
     .svc-num {
-      font-family: 'Syne', sans-serif; font-size: 0.75rem;
+      font-family: 'Bricolage Grotesque', sans-serif; font-size: 0.75rem;
       font-weight: 700; color: rgba(0,0,0,0.18);
       min-width: 30px; transition: color .3s;
     }
     .svc-name {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Bricolage Grotesque', sans-serif;
       font-size: clamp(1.1rem, 2.5vw, 1.7rem);
       font-weight: 800; letter-spacing: -0.01em;
       flex: 1;
@@ -556,7 +1339,13 @@
       .about-sticky { position: static; }
       .about-stats { grid-template-columns: repeat(3,1fr); }
       #portfolio { padding: 4rem 1.5rem; }
-      .work-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .proj-grid { grid-template-columns: 1fr; }
+      .brand-thumb, .brand-thumb--empty { width: 120px; }
+      .brand-info { padding: 1.25rem; }
+      .brand-socials { padding: 0.75rem 1.25rem; }
+      .subpage-nav { padding: 1rem 1.5rem; }
+      .subpage-content { padding: 1.5rem; }
+      .subpage-poster-grid { grid-template-columns: repeat(2,1fr); }
       #services { padding: 4rem 1.5rem; }
       .services-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
       .services-header p { text-align: left; }
@@ -581,11 +1370,12 @@
   <nav id="main-nav">
     <a class="nav-logo" href="#" id="nav-logo">AB</a>
     <div class="nav-links" id="nav-links">
-      <a href="#about">Rreth</a>
-      <a href="#portfolio">Portofol</a>
-      <a href="#services">Shërbime</a>
-      <a href="#contact">Kontakt</a>
+      <a href="#about" data-t="nav-about">About</a>
+      <a href="#portfolio" data-t="nav-portfolio">Portfolio</a>
+      <a href="#services" data-t="nav-services">Services</a>
+      <a href="#contact" data-t="nav-contact">Contact</a>
     </div>
+    <button class="lang-toggle" id="langToggle"><span class="lt-active">EN</span><span class="lt-sep">/</span><span>AL</span></button>
   </nav>
 
   <!-- ═══════════ HERO ═══════════ -->
@@ -593,7 +1383,45 @@
     <div class="hero-accent-bar"></div>
 
     <div class="hero-left">
-      <div class="hero-eyebrow">Tiranë, Shqipëri &nbsp;·&nbsp; 2026</div>
+
+      <!-- artistic stats layer -->
+      <div class="hero-stats">
+
+        <!-- bar chart -->
+        <div class="hstat-bars">
+          <div class="hbar"></div>
+          <div class="hbar"></div>
+          <div class="hbar"></div>
+          <div class="hbar"></div>
+          <div class="hbar"></div>
+          <div class="hbar"></div>
+          <div class="hbar"></div>
+        </div>
+
+        <!-- arc ring -->
+        <div class="hstat-arc">
+          <svg viewBox="0 0 70 70" fill="none">
+            <circle cx="35" cy="35" r="30" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+            <path d="M35 5 A30 30 0 0 1 65 35" stroke="#1B4FDE" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+            <path d="M65 35 A30 30 0 0 1 35 65" stroke="#E31A1A" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+            <path d="M35 65 A30 30 0 0 1 5 35" stroke="#F5C800" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+            <circle cx="35" cy="5"  r="3" fill="#1B4FDE" opacity="0.8"/>
+            <circle cx="65" cy="35" r="3" fill="#E31A1A" opacity="0.8"/>
+            <circle cx="35" cy="65" r="3" fill="#F5C800" opacity="0.8"/>
+          </svg>
+        </div>
+
+        <!-- dot grid -->
+        <div class="hstat-dots">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+
+      </div>
+
+      <div class="hero-eyebrow" data-t="hero-eyebrow">Tirana, Albania &nbsp;·&nbsp; 2026</div>
 
       <h1 class="hero-name">
         Arnold<br />
@@ -601,20 +1429,28 @@
       </h1>
 
       <div class="hero-roles">
-        <div class="hero-role"><div class="r-dot"></div>Digital Creative Director</div>
-        <div class="hero-role"><div class="r-dot"></div>Broker &amp; Konsulent</div>
-        <div class="hero-role"><div class="r-dot"></div>Artist &amp; Piktor</div>
-        <div class="hero-role"><div class="r-dot"></div>Social Media Manager</div>
+        <div class="hero-role"><div class="r-dot"></div><span data-t="role-1">Digital Creative Director</span></div>
+        <div class="hero-role"><div class="r-dot"></div><span data-t="role-2">Broker &amp; Consultant</span></div>
+        <div class="hero-role"><div class="r-dot"></div><span data-t="role-3">Artist &amp; Painter</span></div>
+        <div class="hero-role"><div class="r-dot"></div><span data-t="role-4">Social Media Manager</span></div>
       </div>
 
       <a href="#portfolio" class="hero-cta">
-        Shiko punët
+        <span data-t="hero-cta">View Work</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
     </div>
 
     <div class="hero-right">
-      <img src="profile.jpg" alt="Arnold Broqi" class="hero-photo" />
+      <div class="brushes">
+        <div class="brush brush-1"></div>
+        <div class="brush brush-2"></div>
+        <div class="brush brush-3"></div>
+        <div class="brush brush-4"></div>
+        <div class="brush brush-5"></div>
+        <div class="brush brush-6"></div>
+      </div>
+      <img src="profile.png" alt="Arnold Broqi" class="hero-photo" />
     </div>
 
     <div class="hero-bg-name">BROQI</div>
@@ -631,19 +1467,25 @@
   <section id="about">
     <div class="about-sticky">
       <div class="about-photo-wrap reveal">
-        <img src="profile.jpg" alt="Arnold Broqi" />
+        <img src="profile.png" alt="Arnold Broqi" />
         <span class="photo-label">Arnold Broqi</span>
       </div>
     </div>
 
     <div class="about-content">
-      <p class="s-label reveal">Rreth meje</p>
-      <h2 class="s-title reveal">Creative.<br />Strategjik.<br />Origjinal.</h2>
+      <p class="s-label reveal" data-t="about-label">About me</p>
+      <h2 class="s-title reveal" data-t="about-title">Creative.<br />Visionary.<br />Impactful.</h2>
 
-      <p class="lead reveal reveal-delay-1">
-        Jam Arnold Broqi — <strong>Digital Creative Director</strong>, Artist dhe Broker
-        me bazë në Tiranë. Ndërthur artin vizual me strategjinë digjitale për të ndërtuar
-        brand-e me identitet të fortë dhe rezultate reale.
+      <div class="current-role reveal">
+        <span class="cr-dot"></span>
+        <span class="cr-text" data-t="about-current">Currently — <strong>Social Media Manager &amp; Content Creator</strong> at <a href="https://kontakt.al" target="_blank">Kontakt.al</a> &amp; <a href="https://www.instagram.com/erina.atelier/" target="_blank">Erina.al</a></span>
+      </div>
+
+      <p class="lead reveal reveal-delay-1" data-t="about-lead1">
+        I'm Arnold Broqi — <strong>Digital Creative Director</strong>, Artist and Broker based in Tirana. I merge visual art with digital strategy to build brands with a strong identity and real results.
+      </p>
+      <p class="lead reveal reveal-delay-2" style="margin-top:-1rem;" data-t="about-lead2">
+        As a <strong>Broker &amp; Business Consultant</strong>, I help individuals and businesses find the right opportunities — whether you're looking to <strong>invest in real estate</strong>, need guidance on <strong>financial decisions</strong>, or want to <strong>connect with the right partners</strong> for your business. I bridge people, capital and opportunity — so you don't have to figure it out alone.
       </p>
 
       <div class="about-tags reveal reveal-delay-2">
@@ -651,21 +1493,21 @@
         <span class="a-tag red">Broker</span>
         <span class="a-tag yellow">Artist</span>
         <span class="a-tag gray">Social Media</span>
-        <span class="a-tag gray">Konsulencë</span>
+        <span class="a-tag gray" data-t="tag-consulting">Consulting</span>
       </div>
 
       <div class="about-stats reveal reveal-delay-3">
         <div class="a-stat">
           <div class="a-stat-n">4<span class="sup">+</span></div>
-          <div class="a-stat-l">Vite eksperiencë</div>
+          <div class="a-stat-l" data-t="stat-years">Years of experience</div>
         </div>
         <div class="a-stat">
           <div class="a-stat-n">20<span class="sup">+</span></div>
-          <div class="a-stat-l">Klientë</div>
+          <div class="a-stat-l" data-t="stat-clients">Clients</div>
         </div>
         <div class="a-stat">
           <div class="a-stat-n">100<span class="sup">%</span></div>
-          <div class="a-stat-l">Dedikimi</div>
+          <div class="a-stat-l" data-t="stat-dedication">Dedication</div>
         </div>
       </div>
     </div>
@@ -677,79 +1519,96 @@
   <section id="portfolio">
     <div class="portfolio-header reveal">
       <div>
-        <p class="s-label">Portofoli</p>
-        <h2 class="s-title">Punët<br />e mia.</h2>
+        <p class="s-label" data-t="port-label">Portfolio</p>
+        <h2 class="s-title" data-t="port-title">Selected<br />Work.</h2>
       </div>
-      <p style="font-size:.85rem;color:var(--gray);max-width:220px;text-align:right;line-height:1.7;">
-        Projekte reale nga fusha e kreativitetit dhe artit.
+      <p style="font-size:.85rem;color:var(--gray);max-width:220px;text-align:right;line-height:1.7;" data-t="port-desc">
+        Real projects from the field of creativity and art.
       </p>
     </div>
 
-    <!-- category tabs -->
-    <div class="cat-tabs reveal">
-      <button class="cat-tab active" data-cat="content">Content Creator</button>
-      <button class="cat-tab" data-cat="art">Art</button>
-    </div>
-
-    <!-- CONTENT CREATOR panel -->
-    <div class="cat-panel active" id="panel-content">
-      <div class="work-grid">
-
-        <div class="work-card reveal">
-          <div class="work-card-img">
-            <div class="work-placeholder">CC</div>
-            <div class="work-card-hover"><span class="work-hover-label">Shiko projektin →</span></div>
-          </div>
-          <div class="work-card-body">
-            <div class="work-card-cat">Social Media</div>
-            <div class="work-card-title">Kontakt AL — Q1 2026</div>
-            <div class="work-card-desc">Menaxhim i plotë i 4 platformave. 14.8M views totale.</div>
-          </div>
+    <!-- PROJECT CARDS GRID -->
+    <!-- BRAND: Kontakt.al -->
+    <div class="brand-block reveal">
+      <div class="brand-header">
+        <div class="brand-info">
+          <span class="brand-tag">Real Estate · 2024–2026</span>
+          <h3 class="brand-name">Kontakt.al</h3>
+          <p class="brand-desc" data-t="b1-desc">Social Media Management — full strategy, content creation and community management across all platforms.</p>
         </div>
-
-        <div class="work-card reveal reveal-delay-1">
-          <div class="work-card-img">
-            <div class="work-placeholder">CC</div>
-            <div class="work-card-hover"><span class="work-hover-label">Shiko projektin →</span></div>
-          </div>
-          <div class="work-card-body">
-            <div class="work-card-cat">Branding</div>
-            <div class="work-card-title">Projekt 2</div>
-            <div class="work-card-desc">Identitet vizual dhe strategji komunikimi.</div>
-          </div>
-        </div>
-
-        <div class="work-card add-new reveal reveal-delay-2">
-          <div class="plus-icon">+</div>
-          <span>Shto projekt</span>
-        </div>
-
+        <img src="logo-kontakt.png" alt="Kontakt.al" class="brand-thumb brand-logo" />
+      </div>
+      <div class="brand-socials">
+        <a href="https://www.instagram.com/kontakt_al/" target="_blank" class="bsoc bsoc-ig">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a href="https://www.facebook.com/kontakt.al" target="_blank" class="bsoc bsoc-fb">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          Facebook
+        </a>
+        <a href="https://www.tiktok.com/@kontakt.al" target="_blank" class="bsoc bsoc-tt">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+          TikTok
+        </a>
+        <a href="https://www.youtube.com/@KontaktKompaniNdertimi" target="_blank" class="bsoc bsoc-yt">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+          YouTube
+        </a>
+        <a href="https://www.linkedin.com/in/kontakt-shpk/" target="_blank" class="bsoc bsoc-li">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://x.com/KontaktAl" target="_blank" class="bsoc bsoc-x">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.747l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          X
+        </a>
+        <a href="https://www.pinterest.com/kontaktal/" target="_blank" class="bsoc bsoc-pin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+          Pinterest
+        </a>
       </div>
     </div>
 
-    <!-- ART panel -->
-    <div class="cat-panel" id="panel-art">
-      <div class="work-grid">
-
-        <div class="work-card reveal">
-          <div class="work-card-img">
-            <div class="work-placeholder" style="color:rgba(227,26,26,0.08)">ART</div>
-            <div class="work-card-hover" style="background:rgba(227,26,26,0.88)"><span class="work-hover-label">Shiko veprën →</span></div>
-          </div>
-          <div class="work-card-body">
-            <div class="work-card-cat" style="color:var(--red)">Pikturë</div>
-            <div class="work-card-title">Vepra 1</div>
-            <div class="work-card-desc">Teknika dhe stili unik origjinal.</div>
-          </div>
+    <!-- BRAND: Erina.al -->
+    <div class="brand-block reveal reveal-delay-1">
+      <div class="brand-header">
+        <div class="brand-info">
+          <span class="brand-tag" style="color:var(--red);background:rgba(227,26,26,0.07);border-color:rgba(227,26,26,0.15);">Fashion &amp; Lifestyle</span>
+          <h3 class="brand-name">Erina.al</h3>
+          <p class="brand-desc" data-t="b2-desc">Social Media Management — content creation, campaigns and brand identity across all platforms.</p>
         </div>
-
-        <div class="work-card add-new reveal reveal-delay-1">
-          <div class="plus-icon">+</div>
-          <span>Shto vepër</span>
-        </div>
-
+        <img src="logo-erina.jpg" alt="Erina.al" class="brand-thumb brand-logo brand-logo--photo" />
+      </div>
+      <div class="brand-socials">
+        <a href="https://www.instagram.com/erina.atelier/" target="_blank" class="bsoc bsoc-ig">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a href="https://www.pinterest.com/erina_atelier/" target="_blank" class="bsoc bsoc-pin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+          Pinterest
+        </a>
+        <a href="https://erina.al" target="_blank" class="bsoc bsoc-web">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          erina.al
+        </a>
       </div>
     </div>
+
+    <!-- Art Career Entry Card -->
+    <div class="brand-block art-entry-card reveal reveal-delay-2" id="openArtPage">
+      <div class="art-brushes">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="art-entry-inner">
+        <span class="art-entry-label">Artist &amp; Painter</span>
+        <h2 class="art-entry-title">Artistic<br/>Career</h2>
+        <p class="art-entry-sub">Paintings · Visual Art · Exhibitions</p>
+      </div>
+      <div class="art-entry-arrow">→</div>
+    </div>
+
   </section>
 
   <hr class="divider" />
@@ -758,10 +1617,10 @@
   <section id="services">
     <div class="services-header reveal">
       <div>
-        <p class="s-label">Çfarë bëj</p>
-        <h2 class="s-title">Shërbime.</h2>
+        <p class="s-label" data-t="svc-label">What I do</p>
+        <h2 class="s-title" data-t="svc-title">Services.</h2>
       </div>
-      <p>Zgjidhje kreative dhe strategjike për brand-e dhe individë.</p>
+      <p data-t="svc-desc">Creative and strategic solutions for brands and individuals.</p>
     </div>
 
     <div class="services-rows">
@@ -769,9 +1628,9 @@
         <span class="svc-num">01</span>
         <span class="svc-name">Social Media Management</span>
         <div class="svc-tags">
-          <span class="svc-tag">Strategji</span>
+          <span class="svc-tag" data-t="s1t1">Strategy</span>
           <span class="svc-tag">Content</span>
-          <span class="svc-tag">Analizë</span>
+          <span class="svc-tag" data-t="s1t2">Analytics</span>
         </div>
       </div>
       <div class="svc-row reveal reveal-delay-1">
@@ -779,22 +1638,22 @@
         <span class="svc-name">Digital Creative Direction</span>
         <div class="svc-tags">
           <span class="svc-tag">Branding</span>
-          <span class="svc-tag">Identitet vizual</span>
+          <span class="svc-tag" data-t="s2t1">Visual Identity</span>
         </div>
       </div>
       <div class="svc-row reveal reveal-delay-2">
         <span class="svc-num">03</span>
-        <span class="svc-name">Broker &amp; Konsulencë</span>
+        <span class="svc-name" data-t="s3-name">Broker &amp; Consulting</span>
         <div class="svc-tags">
-          <span class="svc-tag">Patundshmëri</span>
-          <span class="svc-tag">Investime</span>
+          <span class="svc-tag" data-t="s3t1">Real Estate</span>
+          <span class="svc-tag" data-t="s3t2">Investments</span>
         </div>
       </div>
       <div class="svc-row reveal reveal-delay-3">
         <span class="svc-num">04</span>
-        <span class="svc-name">Art &amp; Pikturë</span>
+        <span class="svc-name" data-t="s4-name">Art &amp; Painting</span>
         <div class="svc-tags">
-          <span class="svc-tag">Krijime origjinale</span>
+          <span class="svc-tag" data-t="s4t1">Original Works</span>
         </div>
       </div>
     </div>
@@ -807,12 +1666,14 @@
     <div class="contact-shape s3"></div>
 
     <div class="contact-left reveal">
-      <p class="s-label">Le të flasim</p>
-      <h2 class="s-title">Bashkëpuno<br />me <em>Arnold.</em></h2>
-      <p>Ke një projekt, ide apo pyetje?<br />Jam këtu — mos hezito.</p>
+      <p class="s-label" data-t="c-label">Let's talk</p>
+      <h2 class="s-title" data-t="c-title">Collaborate<br />with <em>Arnold.</em></h2>
+      <p data-t="c-desc">Have a project, idea or question?<br />I'm here — don't hesitate.</p>
     </div>
 
     <div class="contact-right reveal reveal-delay-1">
+
+      <!-- Instagram -->
       <a href="https://www.instagram.com/arnold.broqi/" target="_blank" class="c-card">
         <div class="c-icon ig">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -827,12 +1688,196 @@
         </div>
         <span class="c-arrow">→</span>
       </a>
+
+      <!-- Email -->
+      <a href="mailto:arnoldbroqi9@outlook.com" class="c-card">
+        <div class="c-icon" style="background:rgba(27,79,222,0.9)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <polyline points="2,4 12,13 22,4"/>
+          </svg>
+        </div>
+        <div class="c-info">
+          <span class="c-label">Email</span>
+          <span class="c-val">arnoldbroqi9@outlook.com</span>
+        </div>
+        <span class="c-arrow">→</span>
+      </a>
+
+      <!-- WhatsApp -->
+      <a href="https://wa.me/355693039246" target="_blank" class="c-card">
+        <div class="c-icon" style="background:#25D366">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+          </svg>
+        </div>
+        <div class="c-info">
+          <span class="c-label">WhatsApp</span>
+          <span class="c-val">+355 69 303 9246</span>
+        </div>
+        <span class="c-arrow">→</span>
+      </a>
+
     </div>
   </section>
 
+  <!-- ═══════════ ART PAGE ═══════════ -->
+  <div id="artPage" class="subpage">
+
+    <!-- Nav -->
+    <nav class="subpage-nav">
+      <button class="subpage-back" id="closeArtPage">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </button>
+      <span class="subpage-title">Art &amp; Painting</span>
+      <span></span>
+    </nav>
+
+    <!-- Hero -->
+    <div class="art-page-hero">
+      <div class="art-page-hero-brushes">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="art-page-tag">Artist · Painter · Visual Creator</span>
+      <h1 class="art-page-title">Art is how I<br/><em>speak</em> without<br/>words.</h1>
+      <p class="art-page-lead">Beyond strategy and digital creation, painting is where Arnold expresses raw emotion — colour, texture and form become a language of their own.</p>
+    </div>
+
+    <!-- Body -->
+    <div class="art-page-body">
+
+      <!-- Artist Statement -->
+      <p class="art-section-label">Artist Statement</p>
+      <div class="art-statement">
+        <div class="art-statement-text">
+          <h3>Where Instinct<br/>Meets Craft</h3>
+          <p>My artistic practice sits at the intersection of emotion and discipline. Trained in the fine arts from an early age, I've built a foundation that runs deep — from classical drawing and painting to contemporary graphic design.</p>
+          <p>Influenced by the raw energy of expressionism and the precision of graphic design, my paintings carry the same visual intelligence that defines my work in digital media — purposeful, striking and human.</p>
+        </div>
+        <div class="art-mediums">
+          <div class="art-medium-row">
+            <div class="art-medium-dot" style="background:var(--blue)"></div>
+            <span class="art-medium-name">Acrylic on Canvas</span>
+          </div>
+          <div class="art-medium-row">
+            <div class="art-medium-dot" style="background:var(--red)"></div>
+            <span class="art-medium-name">Oil Painting</span>
+          </div>
+          <div class="art-medium-row">
+            <div class="art-medium-dot" style="background:var(--yellow)"></div>
+            <span class="art-medium-name">Mixed Media</span>
+          </div>
+          <div class="art-medium-row">
+            <div class="art-medium-dot" style="background:#222"></div>
+            <span class="art-medium-name">Ink &amp; Drawing</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <p class="art-section-label">Education</p>
+      <div class="art-edu-grid">
+        <div class="art-edu-card">
+          <span class="art-edu-year">2019 – 2022</span>
+          <h4 class="art-edu-school">Academy of Arts — Tirana</h4>
+          <p class="art-edu-degree">Bachelor of Graphic Design</p>
+          <p class="art-edu-desc">Four years of intensive study in visual communication, typography, illustration and digital design at Albania's leading arts institution.</p>
+        </div>
+        <div class="art-edu-card">
+          <span class="art-edu-year">2016 – 2019</span>
+          <h4 class="art-edu-school">Liceu Artistik "Prenk Jakova" — Shkodër</h4>
+          <p class="art-edu-degree">Fine Arts — Painting</p>
+          <p class="art-edu-desc">Specialised arts high school with a focus on classical painting, drawing, sculpture and art history — the foundation of my visual language.</p>
+        </div>
+      </div>
+
+      <!-- Exhibitions -->
+      <p class="art-section-label">Exhibitions</p>
+      <div class="art-expo-list" id="artExpoList">
+
+        <a href="https://www.youtube.com/watch?v=L6AUySs3F9I" target="_blank" class="art-expo-item">
+          <div class="art-expo-left">
+            <span class="art-expo-year">2022</span>
+            <span class="art-expo-type art-expo-type--solo">Solo</span>
+            <div>
+              <div class="art-expo-name">Ekspozitë Personale — Academy of Arts, Tirana</div>
+              <div class="art-expo-venue">Akademia e Arteve · Tiranë · Works acquired by HM Ambassador to Albania</div>
+            </div>
+          </div>
+          <span class="art-expo-arrow">→</span>
+        </a>
+
+        <div class="art-expo-item art-expo-item--multi">
+          <div class="art-expo-left">
+            <span class="art-expo-year">2023</span>
+            <span class="art-expo-type art-expo-type--group">Co-curator</span>
+            <div>
+              <div class="art-expo-name">"Identitet" — Identity</div>
+              <div class="art-expo-venue">Galeria e Liceut Artistik "Jordan Misja" · Tiranë · 4–15 Dhjetor 2023</div>
+            </div>
+          </div>
+          <div class="art-expo-media-links">
+            <a href="https://www.youtube.com/watch?v=Mg5wV5r8tms" target="_blank" class="art-expo-media-btn">Top Channel →</a>
+            <a href="https://www.youtube.com/watch?v=4MjwUIcTgnw" target="_blank" class="art-expo-media-btn">RTSH →</a>
+          </div>
+        </div>
+
+        <a href="https://www.55news.al/politike/item/277017-disa-endrra-si-forme-lirie-e-rebelimi-studentet-e-arteve-ekspozite-ne-pd" target="_blank" class="art-expo-item">
+          <div class="art-expo-left">
+            <span class="art-expo-year">2024</span>
+            <span class="art-expo-type art-expo-type--group">Curator</span>
+            <div>
+              <div class="art-expo-name">"Disa ëndrra" — Some Dreams</div>
+              <div class="art-expo-venue">Selia e Partisë Demokratike · Tiranë · 13 Gusht 2024</div>
+            </div>
+          </div>
+          <span class="art-expo-arrow">→</span>
+        </a>
+
+      </div>
+
+      <!-- Exhibition description -->
+      <div class="art-expo-desc">
+        <p>In <strong>2022</strong>, during my final year at the Academy of Arts in Tirana, I presented a solo exhibition as part of the university programme. Among the works on display, several were acquired by <strong>HM Ambassador Alastair King-Smith</strong> — British Ambassador to Albania — who chose to hang them at his official residence in Tirana. The works are documented in a tour of the residence recorded by the Anglo-Albanian Association.</p>
+        <p style="margin-top:1rem;">In <strong>December 2023</strong>, <em>"Identitet"</em> — a group exhibition I co-conceived alongside Elsaid Dabula and Xhon Madhi — brought together 18 young artists at the Gallery of Liceu Artistik "Jordan Misja". Drawing from Albanian mythology, epic tradition and the heroism of the partisan generation, the exhibition explored national identity through a contemporary visual lens. Covered by Top Channel Albania and RTSH, and attended by members of the diplomatic community.</p>
+      </div>
+
+      <!-- Gallery -->
+      <p class="art-section-label">Gallery — Original Works</p>
+      <div class="art-gallery-grid" id="artGallery">
+        <div class="art-gallery-item"><img src="artworks/1212.jpg" alt="Violinist — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/333.jpg" alt="Mother and Child — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/2.jpg" alt="Two Figures — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/113re2.jpg" alt="Still Life — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/IMG_0811.jpg" alt="Harbour — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/IMG_0812.jpg" alt="Portrait — Mixed Media" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/IMG_0813.jpg" alt="Candles — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/123134.jpg" alt="Portrait — Oil on Canvas" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/2213124.jpg" alt="Arnold Broqi at work" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/1.jpg" alt="Face — Linocut, Orange" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/22.jpg" alt="Face — Linocut, Blue" loading="lazy"/></div>
+        <div class="art-gallery-item"><img src="artworks/33.jpg" alt="Face — Linocut, Black" loading="lazy"/></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="art-cta-banner">
+        <div>
+          <h3>Interested in a piece?</h3>
+          <p>Commissions, collaborations and original works available on request.</p>
+        </div>
+        <a href="https://wa.me/355693039246" target="_blank" class="art-cta-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          Get in touch
+        </a>
+      </div>
+
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer>
-    <p>© 2026 Arnold Broqi — Të gjitha të drejtat e rezervuara.</p>
+    <p data-t="footer">© 2026 Arnold Broqi — All rights reserved.</p>
     <div class="f-bars"><span></span><span></span><span></span></div>
   </footer>
 
@@ -860,12 +1905,14 @@
         nav.style.borderBottom = '1px solid rgba(0,0,0,0.07)';
         logo.classList.add('dark');
         links.classList.add('dark');
+        langBtn.classList.add('dark-nav');
       } else {
         nav.style.background = 'transparent';
         nav.style.backdropFilter = 'none';
         nav.style.borderBottom = 'none';
         logo.classList.remove('dark');
         links.classList.remove('dark');
+        langBtn.classList.remove('dark-nav');
       }
     });
 
@@ -881,16 +1928,145 @@
     }, { threshold: 0.1 });
     revealEls.forEach(el => io.observe(el));
 
-    // ── Category tabs ──
-    const tabs = document.querySelectorAll('.cat-tab');
-    const panels = document.querySelectorAll('.cat-panel');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        panels.forEach(p => p.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById('panel-' + tab.dataset.cat).classList.add('active');
+    // ── Art Page ──
+    const artPage = document.getElementById('artPage');
+    const openArtBtn = document.getElementById('openArtPage');
+    const closeArtBtn = document.getElementById('closeArtPage');
+
+    openArtBtn.addEventListener('click', () => {
+      artPage.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      artPage.scrollTo(0, 0);
+    });
+
+    closeArtBtn.addEventListener('click', () => {
+      artPage.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && artPage.classList.contains('open')) {
+        artPage.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // ── Language Toggle ──
+    const T = {
+      en: {
+        'nav-about':    'About',
+        'nav-portfolio':'Portfolio',
+        'nav-services': 'Services',
+        'nav-contact':  'Contact',
+        'hero-eyebrow': 'Tirana, Albania &nbsp;·&nbsp; 2026',
+        'role-1': 'Digital Creative Director',
+        'role-2': 'Broker &amp; Consultant',
+        'role-3': 'Artist &amp; Painter',
+        'role-4': 'Social Media Manager',
+        'hero-cta': 'View Work',
+        'about-label': 'About me',
+        'about-title': 'Creative.<br />Visionary.<br />Impactful.',
+        'about-current': 'Currently — <strong>Social Media Manager &amp; Content Creator</strong> at <a href="https://kontakt.al" target="_blank">Kontakt.al</a> &amp; <a href="https://www.instagram.com/erina.atelier/" target="_blank">Erina.al</a>',
+        'about-lead1': 'I\'m Arnold Broqi — <strong>Digital Creative Director</strong>, Artist and Broker based in Tirana. I merge visual art with digital strategy to build brands with a strong identity and real results.',
+        'about-lead2': 'As a <strong>Broker &amp; Business Consultant</strong>, I help individuals and businesses find the right opportunities — whether you\'re looking to <strong>invest in real estate</strong>, need guidance on <strong>financial decisions</strong>, or want to <strong>connect with the right partners</strong> for your business. I bridge people, capital and opportunity — so you don\'t have to figure it out alone.',
+        'tag-consulting': 'Consulting',
+        'stat-years': 'Years of experience',
+        'stat-clients': 'Clients',
+        'stat-dedication': 'Dedication',
+        'port-label': 'Portfolio',
+        'port-title': 'Selected<br />Work.',
+        'port-desc': 'Real projects from the field of creativity and art.',
+        'p1-cat': 'Social Media · Content Creator',
+        'p1-title': 'Kontakt.al — Real Estate Campaign',
+        'p1-desc': 'Full social media management for one of Albania\'s leading real estate companies. Posters, reels, strategy across 4 platforms.',
+        'p1-pieces': '14 pieces',
+        'p2-cat': 'Art · Original Works',
+        'p2-title': 'Paintings &amp; Visual Art',
+        'p2-desc': 'Original artworks — paintings, mixed media and visual explorations with a unique personal style.',
+        'p2-ongoing': 'Ongoing',
+        'p2-soon': 'Coming soon',
+        'svc-label': 'What I do',
+        'svc-title': 'Services.',
+        'svc-desc': 'Creative and strategic solutions for brands and individuals.',
+        's1t1': 'Strategy', 's1t2': 'Analytics',
+        's2t1': 'Visual Identity',
+        's3-name': 'Broker &amp; Consulting', 's3t1': 'Real Estate', 's3t2': 'Investments',
+        's4-name': 'Art &amp; Painting', 's4t1': 'Original Works',
+        'c-label': "Let's talk",
+        'c-title': 'Collaborate<br />with <em>Arnold.</em>',
+        'c-desc': "Have a project, idea or question?<br />I'm here — don't hesitate.",
+        'footer': '© 2026 Arnold Broqi — All rights reserved.'
+      },
+      al: {
+        'nav-about':    'Rreth',
+        'nav-portfolio':'Portofol',
+        'nav-services': 'Shërbime',
+        'nav-contact':  'Kontakt',
+        'hero-eyebrow': 'Tiranë, Shqipëri &nbsp;·&nbsp; 2026',
+        'role-1': 'Drejtor Kreativ Dixhital',
+        'role-2': 'Broker &amp; Konsulent',
+        'role-3': 'Artist &amp; Piktor',
+        'role-4': 'Menaxher Social Media',
+        'hero-cta': 'Shiko Punët',
+        'about-label': 'Rreth meje',
+        'about-title': 'Kreativ.<br />Vizionar.<br />Ndikues.',
+        'about-current': 'Aktualisht — <strong>Menaxher Social Media &amp; Content Creator</strong> tek <a href="https://kontakt.al" target="_blank">Kontakt.al</a> &amp; <a href="https://www.instagram.com/erina.atelier/" target="_blank">Erina.al</a>',
+        'about-lead1': 'Jam Arnold Broqi — <strong>Drejtor Kreativ Dixhital</strong>, Artist dhe Broker me bazë në Tiranë. Ndërthur artin vizual me strategjinë dixhitale për të ndërtuar brand-e me identitet të fortë dhe rezultate reale.',
+        'about-lead2': 'Si <strong>Broker &amp; Konsulent Biznesi</strong>, ndihmoj individë dhe biznese të gjejnë mundësitë e duhura — nëse doni të <strong>investoni në pasuri të paluajtshme</strong>, keni nevojë për këshillim mbi <strong>vendime financiare</strong>, ose doni të <strong>gjeni partnerët e duhur</strong> për biznesin tuaj. I lidh njerëzit, kapitalin dhe mundësitë — që ju të mos keni nevojë ta zgjidhni vetë.',
+        'tag-consulting': 'Konsulencë',
+        'stat-years': 'Vite eksperiencë',
+        'stat-clients': 'Klientë',
+        'stat-dedication': 'Dedikimi',
+        'port-label': 'Portofol',
+        'port-title': 'Punët e<br />Zgjedhura.',
+        'port-desc': 'Projekte reale nga fusha e kreativitetit dhe artit.',
+        'p1-cat': 'Social Media · Krijues Përmbajtje',
+        'p1-title': 'Kontakt.al — Kampanjë Pasurie të Paluajtshme',
+        'p1-desc': 'Menaxhim i plotë i social media për një nga kompanitë kryesore të pasurive të paluajtshme në Shqipëri. Postera, reels, strategji në 4 platforma.',
+        'p1-pieces': '14 copë',
+        'p2-cat': 'Art · Vepra Origjinale',
+        'p2-title': 'Piktura &amp; Art Vizual',
+        'p2-desc': 'Vepra origjinale — piktura, media të përziera dhe eksplorime vizuale me stil unik personal.',
+        'p2-ongoing': 'Në vazhdim',
+        'p2-soon': 'Së shpejti',
+        'svc-label': 'Çfarë bëj',
+        'svc-title': 'Shërbime.',
+        'svc-desc': 'Zgjidhje kreative dhe strategjike për brand-e dhe individë.',
+        's1t1': 'Strategji', 's1t2': 'Analizë',
+        's2t1': 'Identitet Vizual',
+        's3-name': 'Broker &amp; Konsulencë', 's3t1': 'Pasuri të Paluajtshme', 's3t2': 'Investime',
+        's4-name': 'Art &amp; Pikturë', 's4t1': 'Vepra Origjinale',
+        'c-label': 'Le të flasim',
+        'c-title': 'Bashkëpuno<br />me <em>Arnold.</em>',
+        'c-desc': 'Ke një projekt, ide apo pyetje?<br />Jam këtu — mos hezito.',
+        'footer': '© 2026 Arnold Broqi — Të gjitha të drejtat e rezervuara.'
+      }
+    };
+
+    let currentLang = 'en';
+    const langBtn = document.getElementById('langToggle');
+
+    function applyLang(lang) {
+      document.querySelectorAll('[data-t]').forEach(el => {
+        const key = el.getAttribute('data-t');
+        if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
       });
+      // update button
+      const spans = langBtn.querySelectorAll('span');
+      if (lang === 'en') {
+        spans[0].textContent = 'EN'; spans[0].className = 'lt-active';
+        spans[2].textContent = 'AL'; spans[2].className = '';
+      } else {
+        spans[0].textContent = 'AL'; spans[0].className = 'lt-active';
+        spans[2].textContent = 'EN'; spans[2].className = '';
+      }
+      document.documentElement.lang = lang === 'al' ? 'sq' : 'en';
+    }
+
+    langBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'al' : 'en';
+      applyLang(currentLang);
     });
   </script>
 </body>
