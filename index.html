@@ -1450,7 +1450,7 @@
         <div class="brush brush-5"></div>
         <div class="brush brush-6"></div>
       </div>
-      <img src="profile.png" alt="Arnold Broqi" class="hero-photo" />
+      <img src="profile.jpg" alt="Arnold Broqi" class="hero-photo" />
     </div>
 
     <div class="hero-bg-name">BROQI</div>
@@ -1467,7 +1467,7 @@
   <section id="about">
     <div class="about-sticky">
       <div class="about-photo-wrap reveal">
-        <img src="profile.png" alt="Arnold Broqi" />
+        <img src="profile.jpg" alt="Arnold Broqi" />
         <span class="photo-label">Arnold Broqi</span>
       </div>
     </div>
@@ -1933,22 +1933,36 @@
     const openArtBtn = document.getElementById('openArtPage');
     const closeArtBtn = document.getElementById('closeArtPage');
 
-    openArtBtn.addEventListener('click', () => {
+    function openArtPage() {
       artPage.classList.add('open');
       document.body.style.overflow = 'hidden';
       artPage.scrollTo(0, 0);
-    });
+      history.pushState({ artPage: true }, '', '#art');
+    }
 
-    closeArtBtn.addEventListener('click', () => {
+    function closeArtPage() {
       artPage.classList.remove('open');
       document.body.style.overflow = '';
+      if (location.hash === '#art') {
+        history.pushState({}, '', location.pathname);
+      }
+    }
+
+    openArtBtn.addEventListener('click', openArtPage);
+    closeArtBtn.addEventListener('click', closeArtPage);
+
+    // Back button closes subpage instead of leaving site
+    window.addEventListener('popstate', () => {
+      if (artPage.classList.contains('open')) {
+        artPage.classList.remove('open');
+        document.body.style.overflow = '';
+      }
     });
 
     // Close on Escape key
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && artPage.classList.contains('open')) {
-        artPage.classList.remove('open');
-        document.body.style.overflow = '';
+        closeArtPage();
       }
     });
 
